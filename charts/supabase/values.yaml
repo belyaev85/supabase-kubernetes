@@ -91,7 +91,7 @@ db:
   image:
     repository: supabase/postgres
     pullPolicy: IfNotPresent
-    tag: "v12.2.12"
+    tag: "15.8.1.060"
   imagePullSecrets: []
   replicaCount: 1
   nameOverride: ""
