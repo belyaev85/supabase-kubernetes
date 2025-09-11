@@ -1,0 +1,58 @@
+image:
+  repository: kong
+  tag: "2.8.1"
+command:
+  - bash
+  - -c
+args:
+ - eval "echo \"$(cat ~/temp.yml)\"" > ~/kong.yml
+ - /docker-entrypoint.sh kong docker-start
+service:
+  port:
+    - 80
+    - 443
+environment:
+  - name: KONG_DATABASE
+    type: value
+    value: "off"
+  - name: KONG_DECLARATIVE_CONFIG
+    type: value
+    value: "/home/kong/kong.yml"
+  - name: KONG_DNS_ORDER
+    type: value
+    value: "LAST,A,CNAME"
+  - name: KONG_PLUGINS
+    type: value
+    value: "request-transformer,cors,key-auth,acl,basic-auth"
+  - name: KONG_NGINX_PROXY_PROXY_BUFFER_SIZE
+    type: value
+    value: 160k
+  - name: KONG_NGINX_PROXY_PROXY_BUFFERS
+    type: value
+    value: "64 160k"
+  - name: SUPABASE_ANON_KEY
+    type: secret
+    secretName: secret-jwt
+    secretKey: anon
+  - name: SUPABASE_SERVICE_KEY
+    type: secret
+    secretName: secret-jwt
+    secretKey: service
+  - name: DASHBOARD_USERNAME
+    type: secret
+    secretName: secret-dashboard
+    secretKey: username
+  - name: DASHBOARD_PASSWORD
+    type: secret
+    secretName: secret-dashboard
+    secretKey: password
+
+volumeMounts:
+  - name: kong-config
+    mountPath: /home/kong/temp.yml
+    subPath: kong.yml
+
+volumes:
+  - name: kong-config
+    configMap:
+      name: kong-config

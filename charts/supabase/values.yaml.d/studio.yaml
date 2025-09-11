@@ -1,0 +1,73 @@
+image:
+  #
+  repository: supabase/studio
+  tag: latest
+service:
+  port: 3000
+# livenessProbe:
+#     httpGet:
+#       path: /api/profile
+#       port: 3000
+#     initialDelaySeconds: 3
+environment:
+  - name: STUDIO_PG_META_URL
+    type: svcURL
+    component: meta
+
+  - name: POSTGRES_PASSWORD
+    type: secret
+    secretName: secret-db
+    secretKey: password
+
+  - name: DEFAULT_ORGANIZATION_NAME
+    type: value
+    value: Default Organization
+
+  - name: DEFAULT_PROJECT_NAME
+    type: value
+    value: Default Project
+
+  - name: OPENAI_API_KEY
+    type: secret
+    secretName: secret-dashboard
+    secretKey: openAIKey
+
+  - name: SUPABASE_URL
+    type: svcURL
+    component: kong
+
+  - name: SUPABASE_PUBLIC_URL
+    type: value
+    value: "http://localhost:3000"
+
+  - name: SUPABASE_ANON_KEY
+    type: secret
+    secretName: secret-jwt
+    secretKey: anon
+
+  - name: SUPABASE_SERVICE_KEY
+    type: secret
+    secretName: secret-jwt
+    secretKey: service
+
+  - name: AUTH_JWT_SECRET
+    type: secret
+    secretName: secret-jwt
+    secretKey: secret
+
+  - name: LOGFLARE_PRIVATE_ACCESS_TOKEN
+    type: secret
+    secretName: secret-analytics
+    secretKey: privateAccessToken
+
+  - name: LOGFLARE_URL
+    type: svcURL
+    component: analytics
+
+  - name: NEXT_PUBLIC_ENABLE_LOGS
+    type: value
+    value: true
+
+  - name: NEXT_ANALYTICS_BACKEND_PROVIDER
+    type: value
+    value: postgres

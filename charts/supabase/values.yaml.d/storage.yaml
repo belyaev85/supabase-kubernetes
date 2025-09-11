@@ -1,0 +1,69 @@
+image:
+  repository: "supabase/storage-api"
+  tag: "v1.25.7"
+service:
+  port: 5000
+environment:
+  - name: ANON_KEY
+    type: secret
+    secretName: secret-jwt
+    secretKey: secret
+  - name: SERVICE_KEY
+    type: secret
+    secretName: secret-jwt
+    secretKey: service
+  - name: POSTGREST_URL
+    type: svcURL
+    component: rest
+  - name: PGRST_JWT_SECRET
+    type: secret
+    secretName: secret-jwt
+    secretKey: secret
+  - name: DATABASE_URL
+    type: DBUri
+    user: supabase_storage_admin
+  - name: FILE_SIZE_LIMIT
+    type: value
+    value: 52428800
+  - name: STORAGE_BACKEND
+    type: value
+    value: s3
+  - name: GLOBAL_S3_BUCKET
+    type: value
+    value: stub
+  - name: GLOBAL_S3_ENDPOINT
+    type: configMap
+    configMapName: config-s3
+    configMapKey: URL
+  - name: GLOBAL_S3_PROTOCOL
+    type: value
+    value: http
+  - name: GLOBAL_S3_FORCE_PATH_STYLE
+    type: value
+    value: true
+  - name: AWS_ACCESS_KEY_ID
+    type: secret
+    secretName: secret-s3
+    secretKey: username
+  - name: AWS_SECRET_ACCESS_KEY
+    type: secret
+    secretName: secret-s3
+    secretKey: password
+  - name: AWS_DEFAULT_REGION
+    type: value
+    value: stub
+  - name: FILE_STORAGE_BACKEND_PATH
+    type: value
+    value: /var/lib/storage
+  - name: TENANT_ID
+    type: value
+    value: stub
+  - name: REGION
+    type: value
+    value: stub
+  - name: ENABLE_IMAGE_TRANSFORMATION
+    type: value
+    value: "true"
+  - name: IMGPROXY_URL
+    type: svcURL
+    component: imgproxy

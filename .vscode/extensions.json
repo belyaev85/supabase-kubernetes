@@ -1,0 +1,10 @@
+{
+  "recommendations": [
+    "ms-kubernetes-tools.vscode-kubernetes-tools",
+    "ms-azuretools.vscode-docker",
+    "eamodio.gitlens",
+    "esbenp.prettier-vscode",
+    "redhat.vscode-yaml"
+  ],
+  "unwantedRecommendations": ["ms-vscode.vscode-typescript-next", "ms-vscode.vscode-json-language-features"]
+}

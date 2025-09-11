@@ -1,0 +1,60 @@
+image:
+  repository: supabase/logflare
+  tag: "1.14.2"
+service:
+  port: 4000
+livenessProbe:
+  httpGet:
+    path: /health
+    port: 4000
+  initialDelaySeconds: 5
+  periodSeconds: 5
+  timeoutSeconds: 5
+  failureThreshold: 3
+environment:
+  - name: LOGFLARE_NODE_HOST
+    type: value
+    value: "127.0.0.1"
+  - name: DB_USERNAME
+    type: value
+    value: supabase_admin
+  - name: DB_DATABASE
+    type: value
+    value: _supabase
+  - name: DB_HOSTNAME
+    type: configMap
+    configMapName: config-db
+    configMapKey: host
+  - name: DB_PORT
+    type: configMap
+    configMapName: config-db
+    configMapKey: port
+  - name: DB_PASSWORD
+    type: value
+    value: ${POSTGRES_PASSWORD}
+  - name: DB_SCHEMA
+    type: value
+    value: _analytics
+  - name: LOGFLARE_PUBLIC_ACCESS_TOKEN
+    type: secret
+    secretName: secret-analytics
+    secretKey: publicAccessToken
+  - name: LOGFLARE_PRIVATE_ACCESS_TOKEN
+    type: secret
+    secretName: secret-analytics
+    secretKey: privateAccessToken
+  - name: LOGFLARE_SINGLE_TENANT
+    type: value
+    value: "true"
+  - name: LOGFLARE_SUPABASE_MODE
+    type: value
+    value: "true"
+  - name: LOGFLARE_MIN_CLUSTER_SIZE
+    type: value
+    value: 1
+  - name: POSTGRES_BACKEND_SCHEMA
+    type: value
+    value: "_analytics"
+  - name: LOGFLARE_FEATURE_FLAG_OVERRIDE
+    type: value
+    value: "multibackend=true"

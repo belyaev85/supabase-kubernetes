@@ -1,0 +1,101 @@
+image:
+  repository: "supabase/gotrue"
+  tag: "v2.177.0"
+service:
+  port: 9999
+livenessProbe:
+  httpGet:
+    path: /health
+    port: 9999
+  initialDelaySeconds: 5
+  periodSeconds: 5
+  timeoutSeconds: 5
+  failureThreshold: 3
+environment:
+  - name: GOTRUE_API_HOST
+    type: value
+    value: "0.0.0.0"
+  - name: GOTRUE_API_PORT
+    type: value
+    value: 9999
+  - name: API_EXTERNAL_URL
+    type: configMap
+    configMapName: config-dashboard
+    configMapKey: supabaseUrl
+  - name: GOTRUE_DB_DRIVER
+    type: value
+    value: postgres
+  - name: GOTRUE_DB_DATABASE_URL
+    type: DBUri
+    user: supabase_auth_admin
+  - name: GOTRUE_SITE_URL
+    type: configMap
+    configMapName: config-dashboard
+    configMapKey: supabaseUrl
+  - name: GOTRUE_URI_ALLOW_LIST
+    type: value
+    value: ""
+  - name: GOTRUE_DISABLE_SIGNUP
+    type: value
+    value: "true"
+  - name: GOTRUE_JWT_ADMIN_ROLES
+    type: value
+    value: service_role
+  - name: GOTRUE_JWT_AUD
+    type: value
+    value: authenticated
+  - name: GOTRUE_JWT_DEFAULT_GROUP_NAME
+    type: value
+    value: authenticated
+  - name: GOTRUE_JWT_EXP
+    type: value
+    value: 3600
+  - name: GOTRUE_JWT_SECRET
+    type: secret
+    secretName: secret-jwt
+    secretKey: secret
+  - name: GOTRUE_EXTERNAL_EMAIL_ENABLED
+    type: value
+    value: "false"
+  - name: GOTRUE_EXTERNAL_ANONYMOUS_USERS_ENABLED
+    type: value
+    value: "false"
+  - name: GOTRUE_MAILER_AUTOCONFIRM
+    type: value
+    value: "true"
+  - name: GOTRUE_SMTP_ADMIN_EMAIL
+    type: value
+    value: ""
+  - name: GOTRUE_SMTP_HOST
+    type: value
+    value: ""
+  - name: GOTRUE_SMTP_PORT
+    type: value
+    value: 0
+  - name: GOTRUE_SMTP_USER
+    type: value
+    value: ""
+  - name: GOTRUE_SMTP_PASS
+    type: value
+    value: ""
+  - name: GOTRUE_SMTP_SENDER_NAME
+    type: value
+    value: ""
+  - name: GOTRUE_MAILER_URLPATHS_INVITE
+    type: value
+    value: "/auth/v1/verify"
+  - name: GOTRUE_MAILER_URLPATHS_CONFIRMATION
+    type: value
+    value: "/auth/v1/verify"
+  - name: GOTRUE_MAILER_URLPATHS_RECOVERY
+    type: value
+    value: "/auth/v1/verify"
+  - name: GOTRUE_MAILER_URLPATHS_EMAIL_CHANGE
+    type: value
+    value: "/auth/v1/verify"
+  - name: GOTRUE_EXTERNAL_PHONE_ENABLED
+    type: value
+    value: "true"
+  - name: GOTRUE_SMS_AUTOCONFIRM
+    type: value
+    value: "true"

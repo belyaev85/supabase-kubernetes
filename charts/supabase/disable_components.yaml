@@ -1,0 +1,32 @@
+# analytics:
+#   enabled: false
+
+# auth:
+#   enabled: false
+
+# db:
+#   enabled: false
+
+# functions:
+#   enabled: false
+
+# imgproxy:
+#   enabled: false
+
+# kong:
+#   enabled: false
+
+# meta:
+#   enabled: false
+
+# realtime:
+#   enabled: false
+
+# rest:
+#   enabled: false
+
+# storage:
+#   enabled: false
+
+# studio:
+#   enabled: false

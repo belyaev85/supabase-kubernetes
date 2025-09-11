@@ -1,0 +1,31 @@
+image:
+  repository: "postgrest/postgrest"
+  tag: "v12.2.12"
+service:
+  port: 3000
+command:
+  - postgrest
+environment:
+  - name: PGRST_DB_URI
+    type: DBUri
+    user: authenticator
+  - name: PGRST_DB_SCHEMAS
+    type: value
+    value: "public,storage,graphql_public"
+  - name: PGRST_DB_ANON_ROLE
+    type: value
+    value: anon
+  - name: PGRST_JWT_SECRET
+    type: secret
+    secretName: secret-jwt
+    secretKey: secret
+  - name: PGRST_DB_USE_LEGACY_GUCS
+    type: value
+    value: "false"
+  - name: PGRST_APP_SETTINGS_JWT_SECRET
+    type: secret
+    secretName: secret-jwt
+    secretKey: secret
+  - name: PGRST_APP_SETTINGS_JWT_EXP
+    type: value
+    value: 3600

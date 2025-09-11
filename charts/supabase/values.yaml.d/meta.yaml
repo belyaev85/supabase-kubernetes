@@ -1,0 +1,29 @@
+image:
+  repository: "supabase/postgres-meta"
+  tag: "v0.91.6"
+service:
+  port: 8080
+environment:
+  - name: PG_META_PORT
+    type: value
+    value: 8080
+  - name: PG_META_DB_HOST
+    type: configMap
+    configMapName: config-db
+    configMapKey: host
+  - name: PG_META_DB_PORT
+    type: configMap
+    configMapName: config-db
+    configMapKey: port
+  - name: PG_META_DB_NAME
+    type: configMap
+    configMapName: config-db
+    configMapKey: database
+  - name: PG_META_DB_USER
+    type: secret
+    secretName: secret-db
+    secretKey: username
+  - name: PG_META_DB_PASSWORD
+    type: secret
+    secretName: secret-db
+    secretKey: password

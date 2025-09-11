@@ -1,0 +1,54 @@
+{
+  "extensions.ignoreRecommendations": false,
+  "extensions.showRecommendationsOnlyOnDemand": true,
+  "extensions.autoUpdate": false,
+
+  "yaml.schemas": {
+    "file:///Users/andrey/.vscode/extensions/continue.continue-1.2.2-darwin-arm64/config-yaml-schema.json": [
+      ".continue/**/*.yaml",
+      "file:///Users/andrey/.continue/config.yaml"
+    ],
+    "file:///Users/andrey/.vscode/extensions/continue.continue-*/config-yaml-schema.json": [
+      ".continue/**/*.yaml"
+    ],
+    "https://www.schemastore.org/yamllint.json": "charts/supabase/values.yaml.d/kong.yaml"
+  },
+
+  "filewatcher.commands": [
+    {
+      "match": "/values.yaml.d/",
+      "isAsync": false,
+      "cmd": "cd ${workspaceRoot} && cd ./charts/supabase && ./supabase-values-generator.sh",
+      "event": "onFolderChange"
+    }
+  ],
+
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "[yaml]": {
+    "editor.formatOnSave": true,
+    "editor.tabSize": 2
+  },
+  "[json]": {
+    "editor.formatOnSave": true
+  },
+
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/bower_components": true,
+    "**/*.code-search": true
+  },
+  "sqltools.connections": [
+    {
+      "ssh": "Disabled",
+      "previewLimit": 50,
+      "server": "10.43.21.121",
+      "port": 5432,
+      "askForPassword": true,
+      "driver": "PostgreSQL",
+      "name": "supabase",
+      "database": "postgres",
+      "username": "supabase_admin"
+    }
+  ]
+}

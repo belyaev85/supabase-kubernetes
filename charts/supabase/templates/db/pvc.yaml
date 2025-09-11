@@ -1,0 +1,20 @@
+{{ if .Values.db.persistence.enabled}}
+{{ $persistence := .Values.db.persistence}}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "supabase.component.fullname" (dict "ctx" . "component" "db") }}-db-data-pvc
+  labels:
+    {{- include "supabase.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    {{- range $persistence.accessModes }}
+    - {{ . }}
+    {{- end }}
+  {{- if $persistence.storageClassName }}
+  storageClassName: {{ $persistence.storageClassName }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ $persistence.size | quote }}
+{{ end }}

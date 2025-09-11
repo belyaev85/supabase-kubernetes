@@ -1,0 +1,24 @@
+image:
+  repository: "darthsim/imgproxy"
+  tag: "v3.8.0"
+service:
+  port: 5001
+livenessProbe:
+  exec:
+    command:
+      - imgproxy
+      - health
+  initialDelaySeconds: 5
+  periodSeconds: 5
+  timeoutSeconds: 5
+  failureThreshold: 3
+environment:
+  - name: IMGPROXY_BIND
+    type: value
+    value: ":5001"
+  - name: IMGPROXY_USE_ETAG
+    type: value
+    value: "true"
+  - name: IMGPROXY_ENABLE_WEBP_DETECTION
+    type: value
+    value: "true"

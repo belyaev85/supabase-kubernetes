@@ -1,0 +1,53 @@
+image:
+  repository: "supabase/edge-runtime"
+  tag: "v1.67.4"
+command:
+  - start
+  - --main-service
+  - /home/deno/functions/main
+service:
+  port: 54321
+environment:
+  - name: JWT_SECRET
+    type: secret
+    secretName: secret-jwt
+    secretKey: secret
+  - name: SUPABASE_URL
+    type: svcURL
+    component: kong
+  - name: SUPABASE_ANON_KEY
+    type: secret
+    secretName: secret-jwt
+    secretKey: anon
+  - name: SUPABASE_SERVICE_ROLE_KEY
+    type: secret
+    secretName: secret-jwt
+    secretKey: service
+  - name: SUPABASE_DB_URL
+    type: DBUri
+    user: postgres
+  - name: VERIFY_JWT
+    type: value
+    value: "true"
+
+initContainers:
+  - name: copy-functions
+    image: busybox:1.36
+    command:
+      - sh
+      - -c
+      - |
+        set -e
+        mkdir -p /home/deno/functions
+        {{- $files := .Files.Glob "files/functions/**" }}
+        {{- range $path, $file := $files }}
+        echo {{ $file | quote }} > {{ "/home/deno/functions/" trimPrefix "files/functions/" $path }}
+        {{- end }}
+
+volumeMounts:
+  - name: functions
+    mountPath: /home/deno/functions
+
+volumes:
+  - name: functions
+    emptyDir: {}

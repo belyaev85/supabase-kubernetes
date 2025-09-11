@@ -1,0 +1,60 @@
+image:
+  repository: "supabase/realtime"
+  tag: "v2.47.2"
+service:
+  port: 4000
+environment:
+  - name: PORT
+    type: value
+    value: 4000
+  - name: DB_HOST
+    type: configMap
+    configMapName: config-db
+    configMapKey: host
+  - name: DB_PORT
+    type: configMap
+    configMapName: config-db
+    configMapKey: port
+  - name: DB_USER
+    type: secret
+    secretName: secret-db
+    secretKey: username
+  - name: DB_PASSWORD
+    type: secret
+    secretName: secret-db
+    secretKey: password
+  - name: DB_NAME
+    type: configMap
+    configMapName: config-db
+    configMapKey: database
+  - name: DB_AFTER_CONNECT_QUERY
+    type: value
+    value: "SET search_path TO _realtime"
+  - name: DB_ENC_KEY
+    type: value
+    value: supabaserealtime
+  - name: API_JWT_SECRET
+    type: secret
+    secretName: secret-jwt
+    secretKey: secret
+  - name: SECRET_KEY_BASE
+    type: value
+    value: "UpNVntn3cDxHJpq99YMc1T1AQgQpc8kfYTuRgBiYa15BLrx8etQoXz3gZv1/u2oq"
+  - name: ERL_AFLAGS
+    type: value
+    value: "-proto_dist inet_tcp"
+  - name: DNS_NODES
+    type: value
+    value: "''"
+  - name: RLIMIT_NOFILE
+    type: value
+    value: "10000"
+  - name: APP_NAME
+    type: value
+    value: realtime
+  - name: SEED_SELF_HOST
+    type: value
+    value: true
+  - name: RUN_JANITOR
+    type: value
+    value: true

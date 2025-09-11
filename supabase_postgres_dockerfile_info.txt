@@ -1,0 +1,44 @@
+# Информация о Dockerfile образа supabase/postgres:15.8.1.060
+# Получено из docker history --no-trunc
+
+## Основные этапы сборки:
+
+1. Базовый образ: Ubuntu 20.04
+2. Установка зависимостей: curl, gnupg, lsb-release, software-properties-common, wget, sudo
+3. Создание пользователей: postgres и wal-g
+4. Установка Nix package manager
+5. Установка PostgreSQL 15 через Nix
+6. Копирование конфигурационных файлов из ansible/files/
+7. Настройка локалей и timezone
+8. Копирование миграций и скриптов инициализации
+9. Настройка конфигурации PostgreSQL
+10. Установка wal-g для бэкапов
+
+## Ключевые файлы и пути:
+
+- Конфиги PostgreSQL: /etc/postgresql/
+- Скрипты инициализации: /docker-entrypoint-initdb.d/
+- Миграции: /docker-entrypoint-initdb.d/migrations/
+- Скрипты wal-g: /home/postgres/wal_fetch.sh, /root/wal_change_ownership.sh
+- Скрипт pgsodium: /usr/lib/postgresql/bin/pgsodium_getkey.sh
+
+## Исходные файлы (вероятно из репозитория Supabase):
+
+- ansible/files/postgresql_config/*.j2
+- ansible/files/walg_helper_scripts/*
+- ansible/files/pgsodium_getkey_urandom.sh.j2
+- migrations/db/*
+- ansible/files/stat_extension.sql
+- ansible/files/pgbouncer_config/pgbouncer_auth_schema.sql
+
+## Рекомендации по поиску исходного Dockerfile:
+
+1. Искать в репозитории Supabase в папках: docker/, infra/, ansible/
+2. Проверить репозитории с названиями: supabase/postgres, supabase-docker, supabase-infra
+3. Искать файлы с расширением .j2 (Jinja2 templates) - это suggests использование Ansible
+
+## Альтернативные способы получения Dockerfile:
+
+1. Использовать инструмент `dive` для анализа образа: dive supabase/postgres:15.8.1.060
+2. Попробовать найти на Docker Hub в описании образа ссылку на GitHub
+3. Связаться с поддержкой Supabase или поискать в их документации
