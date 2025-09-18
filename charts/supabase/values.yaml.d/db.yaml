@@ -1,16 +1,16 @@
 image:
   repository: "supabase/postgres"
-  tag: "17.5.1.024-orioledb"
-args:
-  - postgres
-  - -c
-  - config_file=/etc/postgresql/postgresql.conf
+  tag: "17.6.1.005"
+# args:
+#   - postgres
+#   - -c
+#   - config_file=/etc/postgresql/postgresql.conf
 service:
   port: 5432
 persistence:
   enabled: "true"
   size: 5Gi
-  storageClassName: local-path-retain
+  storageClassName: local-path
   accessModes:
     - ReadWriteOnce
 environment:
@@ -22,18 +22,3 @@ environment:
     type: configMap
     configMapName: config-db
     configMapKey: database
-volumeMounts:
-  - name: db-data
-    mountPath: /var/lib/postgresql/data
-volumes:
-  - name: db-data
-    persistentVolumeClaim:
-      claimName: db-data-pvc
-migrations:
-  - role-password.sql: |
-      \set pgpass `echo "$POSTGRES_PASSWORD"`
-      ALTER USER authenticator WITH PASSWORD :'pgpass';
-      ALTER USER pgbouncer WITH PASSWORD :'pgpass';
-      ALTER USER supabase_auth_admin WITH PASSWORD :'pgpass';
-      ALTER USER supabase_functions_admin WITH PASSWORD :'pgpass';
-      ALTER USER supabase_storage_admin WITH PASSWORD :'pgpass';

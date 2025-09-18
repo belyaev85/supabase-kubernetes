@@ -1,0 +1,33 @@
+{{- /* vscode-helm-ignore */ -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ printf "%s-%s" (include "supabase.fullname" .) "db-migrate-sh" }}
+  labels: {{- include "supabase.labels" . | nindent 4 }}
+data: {{- (.Files.Glob "files/db/migrate.sh").AsConfig | nindent 4 }}
+
+---
+{{- /* vscode-helm-ignore */ -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ printf "%s-%s" (include "supabase.fullname" .) "db-initscripts" }}
+  labels: {{- include "supabase.labels" . | nindent 4 }}
+data:
+  {{- (.Files.Glob "files/db/init-scripts/**.sql").AsConfig | nindent 4 }}
+---
+{{- /* vscode-helm-ignore */ -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ printf "%s-%s" (include "supabase.fullname" .) "db-migrations" }}
+  labels: {{- include "supabase.labels" . | nindent 4 }}
+data: {{- (.Files.Glob "files/db/migrations/**.sql").AsConfig | nindent 4 }}
+---
+{{- /* vscode-helm-ignore */ -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ printf "%s-%s" (include "supabase.fullname" .) "db-postgresql-schema-sql" }}
+  labels: {{- include "supabase.labels" . | nindent 4 }}
+data: {{- (.Files.Glob "files/db/postgresql.schema.sql").AsConfig | nindent 4 }}

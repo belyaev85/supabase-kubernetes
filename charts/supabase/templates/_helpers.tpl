@@ -15,7 +15,7 @@ If release name contains chart name it will be used as a full name.
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
 {{- $name := default .Chart.Name .Values.nameOverride }}
-{{- if contains $name .Release.Name }}
+{{- if contains .Release.Name $name }}
 {{- .Release.Name | trunc 63 | trimSuffix "-" }}
 {{- else }}
 {{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" }}
@@ -168,3 +168,29 @@ app.kubernetes.io/managed-by: {{ $ctx.Release.Service }}
 {{- include "supabase.base.serviceaccount" (dict "ctx" . "component" $component) }}
 {{- end }}
 {{- end }}
+
+
+{{- define "deepMerge" -}}
+{{- $result := .obj1 }}
+{{- range $key, $value := .obj2 }}
+  {{- if hasKey $result $key }}
+    {{- $existing := get $result $key }}
+    {{- if and (kindIs "slice" $existing) (kindIs "slice" $value) }}
+      {{- /* Объединение массивов */}}
+      {{- $mergedSlice := concat $existing $value }}
+      {{- $result = set $result $key $mergedSlice }}
+    {{- else if and (kindIs "map" $existing) (kindIs "map" $value) }}
+      {{- /* Рекурсивное объединение вложенных объектов */}}
+      {{- $nested := include "deepMerge" (dict "obj1" $existing "obj2" $value) | fromYaml }}
+      {{- $result = set $result $key $nested }}
+    {{- else }}
+      {{- /* Замена примитивных значений */}}
+      {{- $result = set $result $key $value }}
+    {{- end }}
+  {{- else }}
+    {{- /* Добавление новых ключей */}}
+    {{- $result = set $result $key $value }}
+  {{- end }}
+{{- end }}
+{{- toYaml $result }}
+{{- end -}}

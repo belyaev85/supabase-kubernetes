@@ -1,2 +1,32 @@
 {{- /* vscode-helm-ignore */ -}}
-{{- include "supabase.auto.deployment" . }}
+{{- $base := include "supabase.auto.deployment" . | fromYaml}}
+
+
+{{- define "functions.initContainers" }}
+spec:
+  template:
+    spec:
+      initContainers:
+        - name: copy-functions
+          image: busybox
+          command:
+          - sh
+          - -c
+          args:
+          - |
+            set -e
+            mkdir -p /home/deno/functions
+            cd /home/deno/functions
+            {{- $files := .Files.Glob "files/functions/**" }}
+            {{- range $path, $file := $files }}
+            mkdir -p $(dirname {{ trimPrefix "files/functions/" $path | quote }})
+            cat > {{ trimPrefix "files/functions/" $path | quote }} << 'EOF'
+            {{- $.Files.Get $path | nindent 12 }}
+            EOF
+            {{- end }}
+          volumeMounts:
+          - name: functions
+            mountPath: /home/deno/functions
+{{- end }}
+{{- $initContainers := include "functions.initContainers" . | fromYaml }}
+{{ include "deepMerge" (dict "obj1" $base "obj2" $initContainers) }}

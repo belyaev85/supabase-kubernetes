@@ -2,11 +2,12 @@ image:
   repository: kong
   tag: "2.8.1"
 command:
-  - bash
+  - /bin/sh
   - -c
 args:
- - eval "echo \"$(cat ~/temp.yml)\"" > ~/kong.yml
- - /docker-entrypoint.sh kong docker-start
+  - |
+    eval "echo \"$(cat ~/temp.yml)\"" > ~/kong.yml
+    /docker-entrypoint.sh kong docker-start
 service:
   port:
     - 80

@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ include "supabase.component.fullname" (dict "ctx" . "component" "functions") }}-functions-pvc
+  name: {{ include "supabase.component.fullname" (dict "ctx" . "component" "functions") }}-data-pvc
   labels:
     {{- include "supabase.labels" . | nindent 4 }}
 spec:

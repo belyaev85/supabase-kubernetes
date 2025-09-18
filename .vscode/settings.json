@@ -42,13 +42,13 @@
     {
       "ssh": "Disabled",
       "previewLimit": 50,
-      "server": "10.43.21.121",
+      "server": "test-supabase-db.supabase-test.svc.cluster.local",
       "port": 5432,
-      "askForPassword": true,
       "driver": "PostgreSQL",
       "name": "supabase",
       "database": "postgres",
-      "username": "supabase_admin"
+      "username": "supabase_admin",
+      "password": "db-password"
     }
   ]
 }

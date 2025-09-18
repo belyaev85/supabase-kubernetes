@@ -1,2 +1,70 @@
-{{- /* vscode-helm-ignore */ -}}
-{{- include "supabase.auto.deployment" . }}
+{{- /* db */ -}}
+
+{{- define "db.volumeMounts" }}
+volumeMounts:
+- name: {{ printf "%s-%s" (include "supabase.fullname" .) "db-data" }}
+  mountPath: /var/lib/postgresql/data
+{{/* - name: {{ printf "%s-%s" (include "supabase.fullname" .) "db-migrate-sh" }} */}}
+{{/*  mountPath: /docker-entrypoint-initdb.d/ */}}
+- name: {{ printf "%s-%s" (include "supabase.fullname" .) "db-initscripts" }}
+  mountPath: /docker-entrypoint-initdb.d/init-scripts
+- name: {{ printf "%s-%s" (include "supabase.fullname" .) "db-migrations" }}
+  mountPath: /docker-entrypoint-initdb.d/migrations
+- name: {{ printf "%s-%s" (include "supabase.fullname" .) "db-postgresql-schema-sql" }}
+  mountPath: /etc/postgresql.schema.sql
+  subPath: postgresql.schema.sql
+{{- end }}
+{{ $volumeMounts := include "db.volumeMounts" . | fromYaml}}
+
+{{- define "db.volumes" }}
+spec:
+  template:
+    spec:
+      volumes:
+      - name: {{ printf "%s-%s" (include "supabase.fullname" .) "db-migrate-sh" }}
+        configMap:
+          name: {{ printf "%s-%s" (include "supabase.fullname" .) "db-migrate-sh" }}
+      - name: {{ printf "%s-%s" (include "supabase.fullname" .) "db-initscripts" }}
+        configMap:
+          name: {{ printf "%s-%s" (include "supabase.fullname" .) "db-initscripts" }}
+      - name: {{ printf "%s-%s" (include "supabase.fullname" .) "db-migrations" }}
+        configMap:
+          name: {{ printf "%s-%s" (include "supabase.fullname" .) "db-migrations" }}
+      - name: {{ printf "%s-%s" (include "supabase.fullname" .) "db-postgresql-schema-sql" }}
+        configMap:
+          name: {{ printf "%s-%s" (include "supabase.fullname" .) "db-postgresql-schema-sql" }}
+      - name: {{ printf "%s-%s" (include "supabase.fullname" .) "db-data" }}
+        persistentVolumeClaim:
+          claimName: {{ printf "%s-%s" (include "supabase.fullname" .) "db-data-pvc" }}
+
+{{- end }}
+{{ $volumes := include "db.volumes" . | fromYaml }}
+
+{{- define "db.initContainers" }}
+spec:
+  template:
+    spec:
+      initContainers:
+      - name: wipe-default-data
+        image: "{{ .Values.db.image.repository }}:{{ .Values.db.image.tag | default "latest" }}"
+        command: ["/bin/sh", "-c"]
+        args:
+          - |
+            echo "Wiping DB..."
+            rm -rf /var/lib/postgresql/data/*
+        {{ include "db.volumeMounts" . | nindent 8}}
+{{- end }}
+{{- $initContainers := include "db.initContainers" . | fromYaml }}
+
+{{- $base := include "supabase.auto.deployment" . | fromYaml }}
+
+{{ $base := (include "deepMerge" ( dict "obj1" $base "obj2" $volumes)) | fromYaml }}
+{{ $base := (include "deepMerge" ( dict "obj1" $base "obj2" $initContainers)) | fromYaml }}
+{{- $containers := $base.spec.template.spec.containers }}
+{{- range $index, $container := $containers }}
+  {{- $newVolumeMounts := concat (default list $container.volumeMounts) $volumeMounts.volumeMounts }}
+  {{- $_ := set $container "volumeMounts" $newVolumeMounts }}
+{{- end }}
+
+{{ $base | toYaml }}
+

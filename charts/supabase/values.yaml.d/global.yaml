@@ -22,7 +22,7 @@ global:
     privateAccessToken: "your-super-secret-and-long-logflare-key-private"
 
   s3:
-    URL: "http://minio.minio.cluster.local"
+    URL: "http://minio.minio.svc.cluster.local:9000"
     username: admin
     password: hBxsspja7W
 

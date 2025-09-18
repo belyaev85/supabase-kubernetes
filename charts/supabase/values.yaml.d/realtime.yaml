@@ -1,6 +1,6 @@
 image:
   repository: "supabase/realtime"
-  tag: "v2.47.2"
+  tag: "v2.50.1"
 service:
   port: 4000
 environment:
@@ -29,7 +29,7 @@ environment:
     configMapKey: database
   - name: DB_AFTER_CONNECT_QUERY
     type: value
-    value: "SET search_path TO _realtime"
+    value: "SET search_path TO realtime"
   - name: DB_ENC_KEY
     type: value
     value: supabaserealtime

@@ -4,12 +4,11 @@
 # auth:
 #   enabled: false
 
-# db:
-#   enabled: false
+# # db:
+# #   enabled: false
 
-# functions:
-#   enabled: false
-
+functions:
+  enabled: false
 # imgproxy:
 #   enabled: false
 
